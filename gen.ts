@@ -1,4 +1,4 @@
-import { join } from "https://deno.land/std@0.177.0/path/mod.ts";
+import { join } from "./deps.ts";
 
 /**
  * An object representing an entry in a sitemap
