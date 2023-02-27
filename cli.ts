@@ -14,8 +14,9 @@ await new Command()
     if (out === "-") {
       console.log(xml);
     } else {
-      await Deno.writeTextFile(out ?? join(root, "sitemap.xml"), xml);
-      console.log("Sitemap written to", out);
+      out ??= join(root, "sitemap.xml");
+      await Deno.writeTextFile(out, xml);
+      console.log(`Sitemap written to %c${out}`, "color: blue");
     }
   })
   .parse(Deno.args);
