@@ -1,4 +1,4 @@
-import { join } from "./deps.ts";
+import { join, normalize, sep } from "./deps.ts";
 
 /**
  * An object representing an entry in a sitemap
@@ -49,8 +49,10 @@ export async function generateSitemap(
         await addDirectory(path);
       } else if (entry.isFile) {
         const { mtime } = await Deno.stat(path);
+        const relPath = distDirectory === "." ? path : path.substring(distDirectory.length);
+        const pathname = normalize(`/${relPath}`).split(sep).join("/");
         sitemap.push({
-          loc: `${basename}/${path.substring(distDirectory.length)}`,
+          loc: basename + pathname,
           lastmod: (mtime ?? new Date()).toISOString(),
         });
       } else {
