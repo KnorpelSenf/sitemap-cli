@@ -49,7 +49,9 @@ export async function generateSitemap(
         await addDirectory(path);
       } else if (entry.isFile) {
         const { mtime } = await Deno.stat(path);
-        const relPath = distDirectory === "." ? path : path.substring(distDirectory.length);
+        const relPath = distDirectory === "."
+          ? path
+          : path.substring(distDirectory.length);
         const pathname = normalize(`/${relPath}`).split(sep).join("/");
         sitemap.push({
           loc: basename + pathname,
