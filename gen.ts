@@ -22,6 +22,8 @@ export interface SiteMapOptions {
   include?: string;
   /** Glob pattern for files to exclude, overwrites `include` */
   exclude?: string;
+  /** Strip HTML file extensions */
+  clean?: boolean;
 }
 
 /**
@@ -69,7 +71,10 @@ export async function generateSitemap(
       const relPath = distDirectory === "."
         ? path
         : path.substring(distDirectory.length);
-      const pathname = normalize(`/${relPath}`).split(sep).join("/");
+      let pathname = normalize(`/${relPath}`).split(sep).join("/");
+      if (options.clean && pathname.endsWith(".html")) {
+        pathname = pathname.substring(0, pathname.length - ".html".length);
+      }
       sitemap.push({
         loc: basename + pathname,
         lastmod: (mtime ?? new Date()).toISOString(),
