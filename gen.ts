@@ -66,15 +66,15 @@ export async function generateSitemap(
 
   async function addDirectory(directory: string) {
     for await (const path of stableRecurseFiles(directory)) {
-      if (skip(path)) continue;
-      const { mtime } = await Deno.stat(path);
       const relPath = distDirectory === "."
         ? path
         : path.substring(distDirectory.length);
       let pathname = normalize(`/${relPath}`).split(sep).join("/");
+      if (skip(/* strip leading '/' */ pathname.substring(1))) continue;
       if (options.clean && pathname.endsWith(".html")) {
         pathname = pathname.substring(0, pathname.length - ".html".length);
       }
+      const { mtime } = await Deno.stat(path);
       sitemap.push({
         loc: basename + pathname,
         lastmod: (mtime ?? new Date()).toISOString(),
