@@ -1,4 +1,4 @@
-import { join, normalize, sep } from "./deps.ts";
+import { globToRegExp, join, normalize, sep } from "./deps/std.ts";
 
 /**
  * An object representing an entry in a sitemap
@@ -13,6 +13,16 @@ export interface SiteMapEntry {
  * An object representing a sitemap
  */
 export type Sitemap = SiteMapEntry[];
+
+/**
+ * Options for generating a sitemap.
+ */
+export interface SiteMapOptions {
+  /** Glob pattern for files to include, overwritten by `exclude` */
+  include?: string;
+  /** Glob pattern for files to exclude, overwrites `include` */
+  exclude?: string;
+}
 
 /**
  * Generates a sitemap for a given base URL and directory, and converts it to an
@@ -39,14 +49,22 @@ export async function generateSitemapXML(
 export async function generateSitemap(
   basename: string,
   distDirectory: string,
+  options: SiteMapOptions = {},
 ) {
   const sitemap: Sitemap = [];
+  const include = options.include && globToRegExp(options.include);
+  const exclude = options.exclude && globToRegExp(options.exclude);
+  const skip: (path: string) => boolean = include
+    ? exclude
+      ? (path) => exclude.test(path) || !include.test(path)
+      : (path) => !include.test(path)
+    : exclude
+    ? (path) => exclude.test(path)
+    : () => false;
 
   async function addDirectory(directory: string) {
     for await (const path of stableRecurseFiles(directory)) {
-      if (!path.endsWith(".html")) {
-        continue;
-      }
+      if (skip(path)) continue;
       const { mtime } = await Deno.stat(path);
       const relPath = distDirectory === "."
         ? path
