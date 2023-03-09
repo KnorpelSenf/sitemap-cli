@@ -16,7 +16,7 @@ await new Command()
     default: "404.html",
   })
   .option("--clean", "Strip HTML file extensions")
-  .action(async ({ basename, root, out, match, ignore, clean  }) => {
+  .action(async ({ basename, root, out, match, ignore, clean }) => {
     const xml = await generateSitemapXML(basename, root, {
       include: match,
       exclude: ignore,
