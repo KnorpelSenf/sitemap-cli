@@ -43,28 +43,52 @@ export async function generateSitemap(
   const sitemap: Sitemap = [];
 
   async function addDirectory(directory: string) {
-    for await (const entry of Deno.readDir(directory)) {
-      const path = join(directory, entry.name);
-      if (entry.isDirectory) {
-        await addDirectory(path);
-      } else if (entry.isFile) {
-        const { mtime } = await Deno.stat(path);
-        const relPath = distDirectory === "."
-          ? path
-          : path.substring(distDirectory.length);
-        const pathname = normalize(`/${relPath}`).split(sep).join("/");
-        sitemap.push({
-          loc: basename + pathname,
-          lastmod: (mtime ?? new Date()).toISOString(),
-        });
-      } else {
-        // ignore symlinks etc
+    for await (const path of stableRecurseFiles(directory)) {
+      if (!path.endsWith(".html")) {
+        continue;
       }
+      const { mtime } = await Deno.stat(path);
+      const relPath = distDirectory === "."
+        ? path
+        : path.substring(distDirectory.length);
+      const pathname = normalize(`/${relPath}`).split(sep).join("/");
+      sitemap.push({
+        loc: basename + pathname,
+        lastmod: (mtime ?? new Date()).toISOString(),
+      });
     }
   }
 
   await addDirectory(distDirectory);
-  return sitemap.sort(({ loc: l0 }, { loc: l1 }) => l0.localeCompare(l1));
+  return sitemap;
+}
+
+async function* stableRecurseFiles(
+  directory: string,
+): AsyncGenerator<string> {
+  // collect all entries
+  const itr = Deno.readDir(directory);
+  const files: Deno.DirEntry[] = [];
+  for await (const entry of itr) {
+    files.push(entry);
+  }
+  // sort them alphabetically with index.html first
+  const sorted = files.sort(({ name: n0 }, { name: n1 }) => {
+    if (n0 === "index.html") return -1;
+    else if (n1 === "index.html") return 1;
+    else return n0.localeCompare(n1);
+  });
+  // yield them recursively
+  for (const entry of sorted) {
+    const path = join(directory, entry.name);
+    if (entry.isFile) {
+      yield path;
+    } else if (entry.isDirectory) {
+      yield* stableRecurseFiles(path);
+    } else {
+      // ignore symlinks
+    }
+  }
 }
 
 /**
@@ -75,12 +99,11 @@ export async function generateSitemap(
  */
 export function sitemapToXML(sitemap: Sitemap) {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${
     sitemap
       .map(
-        ({ loc, lastmod }) =>
-          `    <url>
+        ({ loc, lastmod }) => `
+    <url>
         <loc>${loc}</loc>
         <lastmod>${lastmod}</lastmod>
     </url>`,
