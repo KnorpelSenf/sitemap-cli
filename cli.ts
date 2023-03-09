@@ -1,5 +1,5 @@
-import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
-import { join } from "./deps.ts";
+import { Command } from "./deps/cliffy.ts";
+import { join } from "./deps/std.ts";
 import { generateSitemapXML } from "./gen.ts";
 
 await new Command()
@@ -9,8 +9,17 @@ await new Command()
   .option("-b, --basename <basename:string>", "Base URL", { required: true })
   .option("-r, --root <dir:string>", "Root working directory", { default: "." })
   .option("-o, --out <outfile:string>", "Output file, or - for standard out")
-  .action(async ({ basename, root, out }) => {
-    const xml = await generateSitemapXML(basename, root);
+  .option("-m --match <glob:string>", "Glob patterns to match", {
+    default: "**/*.html",
+  })
+  .option("-i, --ignore <glob:string>", "Glob patterns to ignore", {
+    default: "404.html",
+  })
+  .action(async ({ basename, root, out, match, ignore }) => {
+    const xml = await generateSitemapXML(basename, root, {
+      include: match,
+      exclude: ignore,
+    });
     if (out === "-") {
       console.log(xml);
     } else {
