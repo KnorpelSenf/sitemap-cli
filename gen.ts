@@ -49,7 +49,9 @@ export async function generateSitemap(
         await addDirectory(path);
       } else if (entry.isFile) {
         const { mtime } = await Deno.stat(path);
-        const relPath = distDirectory === "." ? path : path.substring(distDirectory.length);
+        const relPath = distDirectory === "."
+          ? path
+          : path.substring(distDirectory.length);
         const pathname = normalize(`/${relPath}`).split(sep).join("/");
         sitemap.push({
           loc: basename + pathname,
@@ -73,11 +75,12 @@ export async function generateSitemap(
  */
 export function sitemapToXML(sitemap: Sitemap) {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${
     sitemap
       .map(
-        ({ loc, lastmod }) => `
-    <url>
+        ({ loc, lastmod }) =>
+          `    <url>
         <loc>${loc}</loc>
         <lastmod>${lastmod}</lastmod>
     </url>`,
