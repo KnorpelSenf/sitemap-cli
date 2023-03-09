@@ -11,11 +11,14 @@ Deno CLI to generate a XML sitemap from a local directory.
 Options:
 
 ```sh
--h, --help                  - Show this help.                                                    
--V, --version               - Show the version number for this program.                          
--b, --basename  <basename>  - Base URL                                   (required)              
--r, --root      <dir>       - Root working directory                     (Default: ".")          
--o, --out       <outfile>   - Output file, or - for standard out         (Default: "sitemap.xml")
+-h, --help                  - Show this help.                                                  
+-V, --version               - Show the version number for this program.                        
+-b, --basename  <basename>  - Base URL                                   (required)            
+-r, --root      <dir>       - Root working directory                     (Default: ".")        
+-o, --out       <outfile>   - Output file, or - for standard out                               
+-m, --match     <glob>      - Glob patterns to match                     (Default: "**/*.html")
+-i, --ignore    <glob>      - Glob patterns to ignore                    (Default: "404.html") 
+--clean                     - Strip HTML file extensions                                       
 ```
 
 Works well together with
