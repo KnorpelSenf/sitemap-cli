@@ -51,4 +51,4 @@ deno check *.ts
 ## Credits
 
 - <https://github.com/zerodevx/static-sitemap-cli> for inspiration.
-- <https://github.com/dcdunken> for the initial implementation.
+- <https://github.com/dcdunkan> for the initial implementation.
