@@ -18,7 +18,7 @@ Options:
 -o, --out       <outfile>   - Output file, or - for standard out                               
 -m, --match     <glob>      - Glob patterns to match                     (Default: "**/*.html")
 -i, --ignore    <glob>      - Glob patterns to ignore                    (Default: "404.html") 
---clean                     - Strip HTML file extensions                                       
+--clean                     - Strip HTML file extensions
 ```
 
 Works well together with
