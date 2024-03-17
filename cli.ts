@@ -1,6 +1,6 @@
 import { Command } from "./deps/cliffy.ts";
 import { join } from "./deps/std.ts";
-import { generateSitemapXML } from "./gen.ts";
+import { generateSitemap, sitemapToXML } from "./gen.ts";
 
 await new Command()
   .name("sitemap")
@@ -17,17 +17,21 @@ await new Command()
   })
   .option("--clean", "Strip HTML file extensions")
   .action(async ({ basename, root, out, match, ignore, clean }) => {
-    const xml = await generateSitemapXML(basename, root, {
+    const sitemap = await generateSitemap(basename, root, {
       include: match,
       exclude: ignore,
       clean,
     });
+    const xml = sitemapToXML(sitemap);
     if (out === "-") {
       console.log(xml);
     } else {
       out ??= join(root, "sitemap.xml");
       await Deno.writeTextFile(out, xml);
-      console.log(`Sitemap written to %c${out}`, "color: blue");
+      console.log(
+        `Sitemap with ${sitemap.length} entries written to %c${out}`,
+        "color: blue",
+      );
     }
   })
   .parse(Deno.args);
