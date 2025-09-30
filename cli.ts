@@ -4,7 +4,7 @@ import { generateSitemap, sitemapToXML } from "./gen.ts";
 
 await new Command()
   .name("sitemap")
-  .version("1.2.1")
+  .version("1.2.2")
   .description("sitemap generator for Deno")
   .option("-b, --basename <basename:string>", "Base URL", { required: true })
   .option("-r, --root <dir:string>", "Root working directory", { default: "." })
