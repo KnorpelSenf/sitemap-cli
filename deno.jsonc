@@ -1,1 +1,24 @@
-{ "lock": false }
+{
+  "lock": false,
+  "name": "@knorpelsenf/sitemap",
+  "version": "1.2.1",
+  "license": "MIT",
+  "exports": {
+    ".": "./mod.ts",
+    "./cli": "./cli.ts"
+  },
+  "publish": {
+    "include": [
+      "*.ts",
+      "deno.jsonc",
+      "README.md"
+    ]
+  },
+  "tasks": {
+    "ok": "deno fmt --check && deno lint && deno check *.ts"
+  },
+  "imports": {
+    "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.8",
+    "@std/path": "jsr:@std/path@^1.1.2"
+  }
+}

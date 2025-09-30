@@ -1,13 +1,10 @@
 # Sitemap CLI
 
-> THIS PROJECT HAS MOVED TO JSR at <https://jsr.io/@knorpelsenf/sitemap>.
-> PLEASE UPDATE YOUR IMPORTS.
-
 Deno CLI to create a sitemap from build output.
 
 ## Usage
 
-Usage: `deno run https://deno.land/x/sitemap/cli.ts [args]`
+Usage: `deno run jsr:@knorpelsenf/sitemap/cli [args]`
 
 Deno CLI to generate a XML sitemap from a local directory.
 
@@ -25,13 +22,13 @@ Options:
 ```
 
 Works well together with
-[`deno install`](https://deno.land/manual/tools/script_installer).
+[`deno install`](https://docs.deno.com/runtime/reference/cli/install/).
 
 ## Contributions
 
 All contributions are welcome!
 
-Install [Deno](https://deno.land).
+Install [Deno](https://deno.com).
 
 ### Formatting
 

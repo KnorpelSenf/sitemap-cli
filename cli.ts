@@ -1,10 +1,10 @@
-import { Command } from "./deps/cliffy.ts";
-import { join } from "./deps/std.ts";
+import { Command } from "@cliffy/command";
+import { join } from "@std/path";
 import { generateSitemap, sitemapToXML } from "./gen.ts";
 
 await new Command()
   .name("sitemap")
-  .version("1.1.1")
+  .version("1.2.1")
   .description("sitemap generator for Deno")
   .option("-b, --basename <basename:string>", "Base URL", { required: true })
   .option("-r, --root <dir:string>", "Root working directory", { default: "." })

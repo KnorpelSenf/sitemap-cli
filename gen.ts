@@ -1,4 +1,4 @@
-import { globToRegExp, join, normalize, sep } from "./deps/std.ts";
+import { globToRegExp, join, normalize, SEPARATOR } from "@std/path";
 
 /**
  * An object representing an entry in a sitemap
@@ -35,7 +35,7 @@ export interface SiteMapOptions {
  */
 export async function generateSitemapXML(
   ...args: Parameters<typeof generateSitemap>
-) {
+): Promise<string> {
   const sitemap = await generateSitemap(...args);
   return sitemapToXML(sitemap);
 }
@@ -52,7 +52,7 @@ export async function generateSitemap(
   basename: string,
   distDirectory: string,
   options: SiteMapOptions = {},
-) {
+): Promise<Sitemap> {
   const sitemap: Sitemap = [];
   const include = options.include && globToRegExp(options.include);
   const exclude = options.exclude && globToRegExp(options.exclude);
@@ -69,7 +69,7 @@ export async function generateSitemap(
       const relPath = distDirectory === "."
         ? path
         : path.substring(distDirectory.length);
-      let pathname = normalize(`/${relPath}`).split(sep).join("/");
+      let pathname = normalize(`/${relPath}`).split(SEPARATOR).join("/");
       if (skip(/* strip leading '/' */ pathname.substring(1))) continue;
       if (options.clean && pathname.endsWith(".html")) {
         pathname = pathname.substring(0, pathname.length - ".html".length);
@@ -120,7 +120,7 @@ async function* stableRecurseFiles(
  * @param sitemap A sitemap object
  * @returns The generated XML string
  */
-export function sitemapToXML(sitemap: Sitemap) {
+export function sitemapToXML(sitemap: Sitemap): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${
