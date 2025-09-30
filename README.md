@@ -1,5 +1,8 @@
 # Sitemap CLI
 
+> THIS PROJECT HAS MOVED TO JSR at <https://jsr.io/@knorpelsenf/sitemap>.
+> PLEASE UPDATE YOUR IMPORTS.
+
 Deno CLI to create a sitemap from build output.
 
 ## Usage
