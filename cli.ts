@@ -1,3 +1,14 @@
+/**
+ * This module contains the CLI itself. You can run it with
+ * 
+ * ```sh
+ * deno run jsr:@knorpelsenf/sitemap/cli
+ * ```
+ * 
+ * but not use it programmatically as there are no exported members.
+ * 
+ * @module
+ */
 import { Command } from "@cliffy/command";
 import { join } from "@std/path";
 import { generateSitemap, sitemapToXML } from "./gen.ts";
